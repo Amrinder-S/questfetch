@@ -82,16 +82,74 @@
         font-weight: bold;
         color: #007bff;
     }
-</style>
-
-<div id="questions-container">
-    <h1>Modern Questions</h1>
-    <div id="question-list">
-        {{#questions}}
-        <div class="question">
-            <p><strong>Question {{index}} ({{taxonomy}}):</strong> {{question}}</p>
-            <p><strong>CO:</strong> {{co}}</p>
-        </div>
-        {{/questions}}
+    </style>
+    
+    
+    <div id="questions-container">
+    <h1>Computer Networking Questions</h1>
+    <button onclick="fetchQuestions()">Fetch Questions</button>
+    <button onclick="exportToMoodleXML()">Export to Moodle XML</button>
+    <div id="question-list"></div>
     </div>
-</div>
+    
+    
+        <script>
+            async function fetchQuestions() {
+                const apiUrl = "http://127.0.0.1:5000/questfetch"; // Replace with your API endpoint
+    
+                try {
+                    const response = await fetch(apiUrl);
+                    const data = await response.json();
+                    displayQuestions(data);
+                } catch (error) {
+                    console.error("Error fetching questions:", error);
+                }
+            }
+            function displayQuestions(questions) {
+                const questionList = document.getElementById("question-list");
+                questionList.innerHTML = ""; // Clear existing questions
+            
+                questions[0].questions.forEach((question, index) => {
+                    const questionHTML = `
+                        <div class="question">
+                            <p><strong>Question ${index + 1} (${question.taxonomy}):</strong> ${question.question}</p>
+                            <p><strong>CO:</strong> ${question.co}</p>
+                        </div>
+                    `;
+                    questionList.innerHTML += questionHTML;
+                });
+            }
+            
+    
+            function exportToMoodleXML() {
+                function exportToMoodleXML() {
+    // Make a fetch request to trigger the download of the XML file
+    fetch('/save')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            // Create a temporary URL for the blob
+            const url = window.URL.createObjectURL(blob);
+            
+            // Create an anchor element to trigger the download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'questions.xml'; // Specify the filename
+            document.body.appendChild(a);
+            
+            // Click the anchor to trigger the download
+            a.click();
+            
+            // Clean up by revoking the object URL
+            window.URL.revokeObjectURL(url);
+        })
+        .catch(error => {
+            console.error('Error exporting Moodle XML:', error);
+        });
+}
+    }
+        </script>

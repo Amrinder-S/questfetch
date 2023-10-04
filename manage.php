@@ -43,8 +43,8 @@ if ($questionsData === null) {
 // Assuming your JSON structure contains 'level' for Bloom's level and 'co' for CO.
 $data = [
     'questions' => $questionsData[0]['questions'],
-    'blooms_level' => $questionsData[0]['level'], // Adjust the key based on your JSON structure
-    'co' => $questionsData[0]['co'], // Adjust the key based on your JSON structure
+    'blooms_level' => $questionsData[0]['level'],
+    'co' => $questionsData[0]['co'],
 ];
 
 echo $OUTPUT->render_from_template('local_questfetch/manage', $data);
